@@ -41,16 +41,19 @@ class BarChartData extends AxisChartData with EquatableMixin {
     BarTouchData? barTouchData,
     double? maxY,
     double? minY,
+    double? maxX,
     super.baselineY,
     FlGridData? gridData,
     super.borderData,
     RangeAnnotations? rangeAnnotations,
     super.backgroundColor,
     ExtraLinesData? extraLinesData,
+    bool? isScrollable,
   })  : barGroups = barGroups ?? const [],
         groupsSpace = groupsSpace ?? 16,
         alignment = alignment ?? BarChartAlignment.spaceEvenly,
         barTouchData = barTouchData ?? BarTouchData(),
+        isScrollable = isScrollable ?? false,
         super(
           titlesData: titlesData ??
               const FlTitlesData(
@@ -61,7 +64,7 @@ class BarChartData extends AxisChartData with EquatableMixin {
           touchData: barTouchData ?? BarTouchData(),
           extraLinesData: extraLinesData ?? const ExtraLinesData(),
           minX: 0,
-          maxX: 1,
+          maxX: maxX ?? 1,
           maxY: maxY ?? double.nan,
           minY: minY ?? double.nan,
         );
@@ -77,6 +80,9 @@ class BarChartData extends AxisChartData with EquatableMixin {
 
   /// Handles touch behaviors and responses.
   final BarTouchData barTouchData;
+
+  /// Handle scrollable
+  final bool isScrollable;
 
   /// Copies current [BarChartData] to a new [BarChartData],
   /// and replaces provided values.
@@ -94,6 +100,7 @@ class BarChartData extends AxisChartData with EquatableMixin {
     double? baselineY,
     Color? backgroundColor,
     ExtraLinesData? extraLinesData,
+    bool? isScrollable,
   }) =>
       BarChartData(
         barGroups: barGroups ?? this.barGroups,
@@ -106,9 +113,11 @@ class BarChartData extends AxisChartData with EquatableMixin {
         borderData: borderData ?? this.borderData,
         maxY: maxY ?? this.maxY,
         minY: minY ?? this.minY,
+        maxX: maxX,
         baselineY: baselineY ?? this.baselineY,
         backgroundColor: backgroundColor ?? this.backgroundColor,
         extraLinesData: extraLinesData ?? this.extraLinesData,
+        isScrollable: isScrollable ?? this.isScrollable,
       );
 
   /// Lerps a [BaseChartData] based on [t] value, check [Tween.lerp].
@@ -127,10 +136,12 @@ class BarChartData extends AxisChartData with EquatableMixin {
         borderData: FlBorderData.lerp(a.borderData, b.borderData, t),
         maxY: lerpDouble(a.maxY, b.maxY, t),
         minY: lerpDouble(a.minY, b.minY, t),
+        maxX: lerpDouble(a.maxX, b.maxX, t),
         baselineY: lerpDouble(a.baselineY, b.baselineY, t),
         backgroundColor: Color.lerp(a.backgroundColor, b.backgroundColor, t),
         extraLinesData:
             ExtraLinesData.lerp(a.extraLinesData, b.extraLinesData, t),
+        isScrollable: b.isScrollable,
       );
     } else {
       throw Exception('Illegal State');
@@ -147,12 +158,14 @@ class BarChartData extends AxisChartData with EquatableMixin {
         barTouchData,
         maxY,
         minY,
+        maxX,
         baselineY,
         gridData,
         borderData,
         rangeAnnotations,
         backgroundColor,
         extraLinesData,
+        isScrollable,
       ];
 }
 

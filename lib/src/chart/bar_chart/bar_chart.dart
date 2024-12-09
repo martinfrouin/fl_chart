@@ -54,14 +54,32 @@ class _BarChartState extends AnimatedWidgetBaseState<BarChart> {
   Widget build(BuildContext context) {
     final showingData = _getData();
 
-    return AxisChartScaffoldWidget(
-      data: showingData,
-      chart: BarChartLeaf(
-        data: _withTouchedIndicators(_barChartDataTween!.evaluate(animation)),
-        targetData: _withTouchedIndicators(showingData),
-        key: widget.chartRendererKey,
-      ),
-    );
+    if (widget.data.isScrollable) {
+      return AxisChartScaffoldWidget(
+        data: showingData,
+        chart: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SizedBox(
+            width: widget.data.maxX,
+            child: BarChartLeaf(
+              data: _withTouchedIndicators(
+                  _barChartDataTween!.evaluate(animation)),
+              targetData: _withTouchedIndicators(showingData),
+              key: widget.chartRendererKey,
+            ),
+          ),
+        ),
+      );
+    } else {
+      return AxisChartScaffoldWidget(
+        data: showingData,
+        chart: BarChartLeaf(
+          data: _withTouchedIndicators(_barChartDataTween!.evaluate(animation)),
+          targetData: _withTouchedIndicators(showingData),
+          key: widget.chartRendererKey,
+        ),
+      );
+    }
   }
 
   BarChartData _withTouchedIndicators(BarChartData barChartData) {
